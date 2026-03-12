@@ -1,29 +1,33 @@
 # Valea
 
-Valea is an experimental AI-native systems programming language.
+**Valea is an AI-native systems programming language.**
 
-This repository contains the **first MVP compiler** written in Rust. The MVP demonstrates a tight autonomous loop:
+Programming languages were built for humans.  
+Valea is built for **humans and autonomous AI agents**.
 
-1. Write Valea code.
-2. Run `valea check --json` for machine-readable diagnostics.
-3. Repair code deterministically.
-4. Run `valea emit-c` on valid programs.
+---
 
-## Current commands
+## The Idea
 
-- `cargo run -- check <file.va>`
-- `cargo run -- check <file.va> --json`
-- `cargo run -- ast <file.va> --json`
-- `cargo run -- fmt <file.va>`
-- `cargo run -- emit-c <file.va>`
+AI agents are increasingly capable of writing software.
 
-## Language subset (MVP)
+But today's programming languages were **not designed for autonomous code generation, repair, and verification**.
 
-- function declarations (`fn name() -> type { expr }`)
-- integer literals
-- boolean literals
-- zero-argument function calls
-- binary addition (`+`)
-- explicit return types (`int`, `bool`)
+Valea explores a simple idea:
 
-See `SPEC.md` for the exact grammar and constraints.
+> What would a programming language look like if it were designed for both humans **and AI agents** from the start?
+
+---
+
+## Core Principles
+
+Valea focuses on five properties:
+
+### Deterministic syntax
+There should be **one obvious way** to express most ideas.
+
+### Explicit semantics
+No hidden allocations, no exceptions, no magic behavior.
+
+### Machine-readable diagnostics
+Compilers should talk to humans **and machines**.
