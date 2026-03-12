@@ -2,7 +2,7 @@
 
 **Valea is an AI-native systems programming language.**
 
-Programming languages were built for humans.  
+Programming languages were built for humans.
 Valea is built for **humans and autonomous AI agents**.
 
 ---
@@ -23,22 +23,11 @@ Valea explores a simple idea:
 
 Valea focuses on five properties:
 
-### Deterministic syntax
-There should be **one obvious way** to express most ideas.
-
-### Explicit semantics
-No hidden allocations, no exceptions, no magic behavior.
-
-### Machine-readable diagnostics
-Compilers should talk to humans **and machines**.
-
-
-### Canonical formatting
-One style only.
-
-
-### Small language surface
-Fewer features → fewer edge cases → easier for agents.
+- **Deterministic syntax**: one obvious way to express most ideas.
+- **Explicit semantics**: no hidden allocations, no exceptions, no magic behavior.
+- **Machine-readable diagnostics**: compiler output should support both humans and tools.
+- **Canonical formatting**: one stable style.
+- **Small language surface**: fewer edge cases and easier automated repair loops.
 
 ---
 
@@ -51,33 +40,13 @@ Autonomous software development requires languages that are:
 - easy to repair
 - easy to verify
 
-Valea enables workflows like:
+Typical Valea workflow:
 
-AI agent receives goal
-↓
-agent writes Valea code
-↓
-compiler returns JSON diagnostics
-↓
-agent fixes code
-↓
-program runs
-
-
----
-
-## Language Goals
-
-Valea aims to be:
-
-- statically typed
-- compiled
-- fast to build
-- memory-safe by default
-- simple ownership model
-- no GC in the core
-- explicit `Result` error handling
-- small standard library
+1. Agent receives a goal.
+2. Agent writes Valea code.
+3. Compiler returns structured diagnostics.
+4. Agent applies fixes.
+5. Program compiles and runs.
 
 ---
 
@@ -91,126 +60,100 @@ fn add(a: i32, b: i32) -> i32 {
 fn main() -> i32 {
     add(2, 3)
 }
+```
 
-AI-Native Tooling
+---
 
-The Valea toolchain exposes structured outputs for agents.
+## AI-native Tooling
 
-Diagnostics
-valea check main.val --json
+### Diagnostics
+
+```sh
+valea check examples/type_error.va --json
+```
 
 Example output:
 
-{
-  "error": "type_mismatch",
-  "expected": "i32",
-  "found": "bool",
-  "line": 12
-}
-AST
-valea ast main.val --json
-Formatter
-valea fmt
-Project Status
+```json
+[
+  {
+    "code": "E001",
+    "message": "type mismatch",
+    "line": 2,
+    "col": 5
+  }
+]
+```
+
+### AST export
+
+```sh
+valea ast examples/ok.va --json
+```
+
+### Formatter
+
+```sh
+valea fmt examples/ok.va
+```
+
+### C emission
+
+```sh
+valea emit-c examples/ok.va
+```
+
+---
+
+## Project Status
 
 Valea is an early-stage experimental language.
 
-The goal of the first milestone is simple:
+Current milestone highlights:
 
-Demonstrate that an AI agent can successfully generate, repair, and compile a Valea program autonomously.
+- Rust MVP compiler
+- deterministic lexer/parser/formatter
+- JSON diagnostics
+- JSON AST export
+- simple C backend
 
-Roadmap
-Milestone 1 — AI-native MVP
+See [ROADMAP.md](ROADMAP.md) for planned milestones.
 
-parser
+---
 
-type checker
-
-canonical formatter
-
-JSON diagnostics
-
-AST export
-
-simple C backend
-
-Milestone 2 — Core Language
-
-variables
-
-control flow
-
-structs
-
-modules
-
-Result types
-
-Milestone 3 — Ownership
-
-move semantics
-
-borrowing
-
-deterministic destruction
-
-Milestone 4 — Agent Tooling
-
-structured lints
-
-fix suggestions
-
-capability metadata
-
-reproducible builds
-
-Getting Started
+## Getting Started
 
 Build the compiler:
 
-cd compiler
+```sh
 cargo build
+```
 
-Run:
+Run checks:
 
-valea check examples/hello.val
-Contributing
+```sh
+cargo test
+cargo run -- check examples/ok.va
+```
+
+---
+
+## Contributing
 
 Valea is designed as a community language experiment.
 
-Good first areas:
+Good first contribution areas:
 
-parser improvements
+- parser improvements
+- formatter rules
+- JSON diagnostics
+- examples
+- documentation
 
-formatter rules
+Language and toolchain behavior are specified in [SPEC.md](SPEC.md).
 
-JSON diagnostics
+---
 
-examples
-
-documentation
-
-See:
-
-CONTRIBUTING.md
-Vision
-
-In the future, AI agents may:
-
-design software
-
-implement systems
-
-repair bugs
-
-optimize performance
-
-deploy services
-
-Valea explores the question:
-
-What language would make that future easier?
-
-License
+## License
 
 MIT
