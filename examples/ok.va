@@ -1,0 +1,7 @@
+fn answer() -> int {
+    40 + 2
+}
+
+fn is_ready() -> bool {
+    true
+}
