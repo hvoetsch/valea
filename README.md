@@ -53,17 +53,15 @@ Autonomous software development requires languages that are:
 
 Valea enables workflows like:
 
-goal
+AI agent receives goal
 ↓
-agent writes code
+agent writes Valea code
 ↓
-compiler returns structured diagnostics
+compiler returns JSON diagnostics
 ↓
 agent fixes code
 ↓
-tests pass
-↓
-binary produced
+program runs
 
 
 ---
