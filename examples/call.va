@@ -1,0 +1,7 @@
+fn two() -> int {
+    2
+}
+
+fn four() -> int {
+    two() + two()
+}
