@@ -31,3 +31,188 @@ No hidden allocations, no exceptions, no magic behavior.
 
 ### Machine-readable diagnostics
 Compilers should talk to humans **and machines**.
+
+
+### Canonical formatting
+One style only.
+
+
+### Small language surface
+Fewer features → fewer edge cases → easier for agents.
+
+---
+
+## Why AI-native?
+
+Autonomous software development requires languages that are:
+
+- easy to generate
+- easy to analyze
+- easy to repair
+- easy to verify
+
+Valea enables workflows like:
+
+goal
+↓
+agent writes code
+↓
+compiler returns structured diagnostics
+↓
+agent fixes code
+↓
+tests pass
+↓
+binary produced
+
+
+---
+
+## Language Goals
+
+Valea aims to be:
+
+- statically typed
+- compiled
+- fast to build
+- memory-safe by default
+- simple ownership model
+- no GC in the core
+- explicit `Result` error handling
+- small standard library
+
+---
+
+## Example
+
+```valea
+fn add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+fn main() -> i32 {
+    add(2, 3)
+}
+
+AI-Native Tooling
+
+The Valea toolchain exposes structured outputs for agents.
+
+Diagnostics
+valea check main.val --json
+
+Example output:
+
+{
+  "error": "type_mismatch",
+  "expected": "i32",
+  "found": "bool",
+  "line": 12
+}
+AST
+valea ast main.val --json
+Formatter
+valea fmt
+Project Status
+
+Valea is an early-stage experimental language.
+
+The goal of the first milestone is simple:
+
+Demonstrate that an AI agent can successfully generate, repair, and compile a Valea program autonomously.
+
+Roadmap
+Milestone 1 — AI-native MVP
+
+parser
+
+type checker
+
+canonical formatter
+
+JSON diagnostics
+
+AST export
+
+simple C backend
+
+Milestone 2 — Core Language
+
+variables
+
+control flow
+
+structs
+
+modules
+
+Result types
+
+Milestone 3 — Ownership
+
+move semantics
+
+borrowing
+
+deterministic destruction
+
+Milestone 4 — Agent Tooling
+
+structured lints
+
+fix suggestions
+
+capability metadata
+
+reproducible builds
+
+Getting Started
+
+Build the compiler:
+
+cd compiler
+cargo build
+
+Run:
+
+valea check examples/hello.val
+Contributing
+
+Valea is designed as a community language experiment.
+
+Good first areas:
+
+parser improvements
+
+formatter rules
+
+JSON diagnostics
+
+examples
+
+documentation
+
+See:
+
+CONTRIBUTING.md
+Vision
+
+In the future, AI agents may:
+
+design software
+
+implement systems
+
+repair bugs
+
+optimize performance
+
+deploy services
+
+Valea explores the question:
+
+What language would make that future easier?
+
+License
+
+MIT
