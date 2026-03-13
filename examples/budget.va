@@ -1,0 +1,51 @@
+fn salary() -> int {
+    4500
+}
+
+fn consulting() -> int {
+    1200
+}
+
+fn side_project() -> int {
+    300
+}
+
+fn total_income() -> int {
+    salary() + consulting() + side_project()
+}
+
+fn rent() -> int {
+    1400
+}
+
+fn groceries() -> int {
+    350
+}
+
+fn transport() -> int {
+    120
+}
+
+fn utilities() -> int {
+    90
+}
+
+fn phone() -> int {
+    45
+}
+
+fn subscriptions() -> int {
+    65
+}
+
+fn entertainment() -> int {
+    180
+}
+
+fn total_expenses() -> int {
+    rent() + groceries() + transport() + utilities() + phone() + subscriptions() + entertainment()
+}
+
+fn is_balanced() -> bool {
+    true
+}
