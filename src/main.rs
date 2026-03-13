@@ -9,13 +9,14 @@ fn main() -> ExitCode {
 
 fn run(args: Vec<String>) -> Result<(), ExitCode> {
     if args.len() < 3 {
-        eprintln!("usage: valea <check|ast|fmt|emit-c> <path> [--json]");
+        eprintln!("usage: valea <check|ast|fmt|emit-c> <path> [--json] [--check]");
         return Err(ExitCode::from(2));
     }
 
     let command = &args[1];
     let path = PathBuf::from(&args[2]);
     let json = args.iter().any(|a| a == "--json");
+    let check_only = args.iter().any(|a| a == "--check");
 
     match command.as_str() {
         "check" => {
@@ -33,8 +34,8 @@ fn run(args: Vec<String>) -> Result<(), ExitCode> {
                     if json {
                         println!("{}", valea::json::diagnostics_json(&diags));
                     } else {
-                        for d in diags {
-                            println!("{}", d.render_human());
+                        for d in &diags {
+                            println!("{}:{}", path.display(), d.render_human_with_source(&source));
                         }
                     }
                     Err(ExitCode::from(1))
@@ -63,12 +64,22 @@ fn run(args: Vec<String>) -> Result<(), ExitCode> {
             match valea::parse_source(&source) {
                 Ok(program) => {
                     let formatted = valea::formatter::format_program(&program);
-                    fs::write(path, formatted).map_err(|_| ExitCode::from(2))?;
-                    Ok(())
+                    if check_only {
+                        if formatted == source {
+                            println!("ok");
+                            Ok(())
+                        } else {
+                            eprintln!("{}: not formatted", path.display());
+                            Err(ExitCode::from(1))
+                        }
+                    } else {
+                        fs::write(path, formatted).map_err(|_| ExitCode::from(2))?;
+                        Ok(())
+                    }
                 }
                 Err(diags) => {
-                    for d in diags {
-                        println!("{}", d.render_human());
+                    for d in &diags {
+                        println!("{}:{}", path.display(), d.render_human_with_source(&source));
                     }
                     Err(ExitCode::from(1))
                 }
@@ -82,7 +93,13 @@ fn run(args: Vec<String>) -> Result<(), ExitCode> {
                     Ok(())
                 }
                 Err(diags) => {
-                    println!("{}", valea::json::diagnostics_json(&diags));
+                    if json {
+                        println!("{}", valea::json::diagnostics_json(&diags));
+                    } else {
+                        for d in &diags {
+                            println!("{}:{}", path.display(), d.render_human_with_source(&source));
+                        }
+                    }
                     Err(ExitCode::from(1))
                 }
             }

@@ -1,3 +1,5 @@
+use crate::diagnostics::Span;
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Program {
     pub functions: Vec<FunctionDecl>,
@@ -6,6 +8,7 @@ pub struct Program {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct FunctionDecl {
     pub name: String,
+    pub name_span: Span,
     pub return_type: Type,
     pub body: Expr,
 }
