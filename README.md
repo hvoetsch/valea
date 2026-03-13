@@ -153,6 +153,9 @@ Good first contribution areas:
 Language and toolchain behavior are specified in [SPEC.md](SPEC.md).
 
 ---
+## Demo
+
+https://asciinema.org/a/834560
 
 ## License
 
