@@ -2,7 +2,7 @@ use valea::{
     ast::{Expr, Type},
     check_source,
     codegen::emit_c,
-    diagnostics::Diagnostic,
+    diagnostics::{offset_to_line_col, Diagnostic},
     formatter::format_program,
     json::diagnostics_json,
     lexer::{lex, TokenKind},
@@ -52,4 +52,34 @@ fn emits_c_for_valid_program() {
     let c = emit_c(&program);
     assert!(c.contains("long a(void)"));
     assert!(c.contains("(1 + 2)"));
+}
+
+#[test]
+fn emits_c_with_forward_declarations() {
+    // b() is defined before a(), so without a forward declaration the C compiler
+    // would see an undeclared function call inside b.
+    let src = "fn b() -> int { a() }\nfn a() -> int { 1 }";
+    let program = check_source(src).expect("type check should pass");
+    let c = emit_c(&program);
+    // Forward declaration must appear before the first function body.
+    let fwd_pos = c.find("long b(void);").expect("forward decl for b");
+    let body_pos = c.find("long b(void) {").expect("definition of b");
+    assert!(fwd_pos < body_pos, "forward declarations must precede definitions");
+    assert!(c.contains("long a(void);"), "forward decl for a");
+}
+
+#[test]
+fn offset_to_line_col_basic() {
+    let src = "fn a() -> int {\n    1\n}";
+    assert_eq!(offset_to_line_col(src, 0), (1, 1));
+    assert_eq!(offset_to_line_col(src, 16), (2, 1)); // char after first '\n'
+}
+
+#[test]
+fn render_human_with_source_shows_line_col() {
+    let src = "fn a() -> bool { 1 }";
+    let d = check_source(src).expect_err("should have type error");
+    let rendered = d[0].render_human_with_source(src);
+    // Should contain "line:col:" prefix, not raw byte offsets.
+    assert!(rendered.starts_with("1:"), "expected line number at start: {rendered}");
 }

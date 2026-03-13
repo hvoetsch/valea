@@ -2,6 +2,17 @@ use crate::ast::{Expr, Program, Type};
 
 pub fn emit_c(program: &Program) -> String {
     let mut out = String::from("#include <stdbool.h>\n\n");
+
+    // Forward declarations allow functions to call others defined later in the file.
+    for function in &program.functions {
+        out.push_str(&format!(
+            "{} {}(void);\n",
+            c_type(&function.return_type),
+            function.name,
+        ));
+    }
+    out.push('\n');
+
     for function in &program.functions {
         out.push_str(&format!(
             "{} {}(void) {{ return {}; }}\n",

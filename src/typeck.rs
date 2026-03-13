@@ -17,8 +17,8 @@ pub fn check(program: &Program) -> Result<(), Vec<Diagnostic>> {
             diagnostics.push(Diagnostic::new(
                 "E200",
                 format!("Duplicate function '{}'", function.name),
-                0,
-                0,
+                function.name_span.start,
+                function.name_span.end,
             ));
         }
     }
@@ -30,11 +30,13 @@ pub fn check(program: &Program) -> Result<(), Vec<Diagnostic>> {
                 diagnostics.push(Diagnostic::new(
                     "E201",
                     format!(
-                        "Function '{}' returns {:?} but declared {:?}",
-                        function.name, body_ty, function.return_type
+                        "Function '{}' returns {} but declared {}",
+                        function.name,
+                        type_display(&body_ty),
+                        type_display(&function.return_type),
                     ),
-                    0,
-                    0,
+                    function.name_span.start,
+                    function.name_span.end,
                 ));
             }
         }
@@ -44,6 +46,13 @@ pub fn check(program: &Program) -> Result<(), Vec<Diagnostic>> {
         Ok(())
     } else {
         Err(diagnostics)
+    }
+}
+
+fn type_display(ty: &Type) -> &'static str {
+    match ty {
+        Type::Int => "int",
+        Type::Bool => "bool",
     }
 }
 
@@ -75,7 +84,11 @@ fn infer_type(
                 (Some(a), Some(b)) => {
                     diagnostics.push(Diagnostic::new(
                         "E203",
-                        format!("'+' requires int operands, got {:?} and {:?}", a, b),
+                        format!(
+                            "'+' requires int operands, got {} and {}",
+                            type_display(&a),
+                            type_display(&b)
+                        ),
                         0,
                         0,
                     ));

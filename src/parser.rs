@@ -1,6 +1,6 @@
 use crate::{
     ast::{Expr, FunctionDecl, Program, Type},
-    diagnostics::Diagnostic,
+    diagnostics::{Diagnostic, Span},
     lexer::{Token, TokenKind},
 };
 
@@ -35,7 +35,7 @@ struct Parser<'a> {
 impl<'a> Parser<'a> {
     fn parse_function(&mut self) -> Option<FunctionDecl> {
         self.expect_exact(TokenKind::Fn, "E100", "Expected 'fn' to start a function")?;
-        let name = self.expect_ident()?;
+        let (name, name_span) = self.expect_ident()?;
         self.expect_exact(
             TokenKind::LParen,
             "E101",
@@ -61,6 +61,7 @@ impl<'a> Parser<'a> {
         )?;
         Some(FunctionDecl {
             name,
+            name_span,
             return_type,
             body,
         })
@@ -126,11 +127,11 @@ impl<'a> Parser<'a> {
         }
     }
 
-    fn expect_ident(&mut self) -> Option<String> {
+    fn expect_ident(&mut self) -> Option<(String, Span)> {
         let token = self.peek()?.clone();
         if let TokenKind::Ident(name) = token.kind {
             self.pos += 1;
-            Some(name)
+            Some((name, Span { start: token.start, end: token.end }))
         } else {
             self.diagnostics.push(Diagnostic::new(
                 "E109",
