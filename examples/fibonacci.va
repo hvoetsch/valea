@@ -1,0 +1,39 @@
+fn fib1() -> int {
+    1
+}
+
+fn fib2() -> int {
+    1
+}
+
+fn fib3() -> int {
+    fib1() + fib2()
+}
+
+fn fib4() -> int {
+    fib2() + fib3()
+}
+
+fn fib5() -> int {
+    fib3() + fib4()
+}
+
+fn fib6() -> int {
+    fib4() + fib5()
+}
+
+fn fib7() -> int {
+    fib5() + fib6()
+}
+
+fn fib8() -> int {
+    fib6() + fib7()
+}
+
+fn fib9() -> int {
+    fib7() + fib8()
+}
+
+fn fib10() -> int {
+    fib8() + fib9()
+}
