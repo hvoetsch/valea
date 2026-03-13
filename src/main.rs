@@ -14,9 +14,18 @@ fn run(args: Vec<String>) -> Result<(), ExitCode> {
     }
 
     let command = &args[1];
-    let path = PathBuf::from(&args[2]);
     let json = args.iter().any(|a| a == "--json");
     let check_only = args.iter().any(|a| a == "--check");
+
+    // Path is the first argument after the command that doesn't start with '--'.
+    let path = args[2..]
+        .iter()
+        .find(|a| !a.starts_with("--"))
+        .map(PathBuf::from)
+        .ok_or_else(|| {
+            eprintln!("usage: valea <check|ast|fmt|emit-c> <path> [--json] [--check]");
+            ExitCode::from(2)
+        })?;
 
     match command.as_str() {
         "check" => {
