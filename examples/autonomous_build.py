@@ -66,20 +66,20 @@ TASK = textwrap.dedent("""
     The service must have these endpoints:
 
     POST /check
-        Body: {"source": "<valea source code>"}
-        Returns: {"valid": true/false, "diagnostics": [...]}
+        Body: {{"source": "<valea source code>"}}
+        Returns: {{"valid": true/false, "diagnostics": [...]}}
 
     POST /run
-        Body: {"source": "<valid valea source>", "functions": ["fn1", "fn2"]}
+        Body: {{"source": "<valid valea source>", "functions": ["fn1", "fn2"]}}
         Compiles the source, runs each listed function, returns results:
-        Returns: {"results": {"fn1": 42, "fn2": true}, "c_source": "..."}
+        Returns: {{"results": {{"fn1": 42, "fn2": true}}, "c_source": "..."}}
 
     GET /
         A minimal HTML page with a textarea to write Valea code and a
         "Run" button that calls /run and shows results. Make it look good.
 
     GET /health
-        Returns: {"status": "ok", "compiler": "<path>"}
+        Returns: {{"status": "ok", "compiler": "<path>"}}
 
     Requirements:
     - Everything in ./build/valea_live/
